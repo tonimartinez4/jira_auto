@@ -1,41 +1,36 @@
 pipeline {
     agent any
 
-    //triggers {
-        //githubPush()
-    //}
-
     stages {
-        stage('Run HTTP checks') {
+        stage('HTTP Checks') {
             steps {
                 script {
-                    // List of URLs to check
-                    def urls = [
-                        'https://example.com/api/health1',
-                        'https://example.com/api/health2'
-                    ]
-
-                    def failedUrls = []
+                    def urls = ['https://example.com/api/health1']
+                    def failed = []
 
                     urls.each { url ->
-                        def response = sh(
+                        def code = sh(
                             script: "curl -s -o /dev/null -w \"%{http_code}\" ${url}",
                             returnStdout: true
                         ).trim()
-
-                        echo "URL: ${url} returned ${response}"
-
-                        if (!response.startsWith('2')) {
-                            failedUrls << url
-                        }
+                        echo "Checked ${url} → ${code}"
+                        if (!code.startsWith("2")) { failed << url }
                     }
 
-                    if (failedUrls) {
-                        error("HTTP check failed for: ${failedUrls.join(', ')}")
+                    if (failed) {
+                        error "Failed URLs: ${failed.join(', ')}"
                     }
                 }
             }
         }
     }
-}
 
+    post {
+        success {
+            githubNotify context: 'HTTP Checks', status: 'SUCCESS', description: 'All endpoints OK'
+        }
+        failure {
+            githubNotify context: 'HTTP Checks', status: 'FAILURE', description: 'Some endpoints failed'
+        }
+    }
+}
