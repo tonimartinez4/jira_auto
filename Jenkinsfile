@@ -22,12 +22,13 @@ pipeline {
                         }
                     }
 
-                    // Send GitHub status via publishChecks
+                    // Use correct publishChecks syntax
                     publishChecks(
                         name: 'HTTP Checks',
                         title: 'HTTP Endpoint Checks',
                         summary: failed ? "Failed URLs: ${failed.join(', ')}" : "All URLs OK",
-                        status: failed ? 'FAILURE' : 'SUCCESS'
+                        status: 'COMPLETED',                     // Must be COMPLETED
+                        conclusion: failed ? 'FAILURE' : 'SUCCESS'  // Set outcome here
                     )
 
                     if (failed) {
