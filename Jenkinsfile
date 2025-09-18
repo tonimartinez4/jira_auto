@@ -4,19 +4,19 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building...'
-                publishChecks name: 'Build', status: 'completed', conclusion: 'success', output: [title: 'Build', summary: 'Build completed.']
+                publishChecks name: 'Build', status: ChecksStatus.COMPLETED, conclusion: ChecksConclusion.SUCCESS, text: 'Build completed successfully.'
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing...'
-                publishChecks name: 'Test', status: 'completed', conclusion: 'success', output: [title: 'Test', summary: 'Tests passed.']
+                publishChecks name: 'Test', status: ChecksStatus.COMPLETED, conclusion: ChecksConclusion.SUCCESS, text: 'All tests passed.'
             }
         }
-        stage('Deploy') {
+        stage('Lint') {
             steps {
-                echo 'Deploying...'
-                publishChecks name: 'Deploy', status: 'completed', conclusion: 'success', output: [title: 'Deploy', summary: 'Deployed.']
+                echo 'Linting...'
+                publishChecks name: 'Lint', status: ChecksStatus.COMPLETED, conclusion: ChecksConclusion.SUCCESS, text: 'No lint errors found.'
             }
         }
     }
