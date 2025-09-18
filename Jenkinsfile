@@ -1,23 +1,14 @@
 pipeline {
     agent any
     stages {
-        stage('Build') {
-            steps {
-                echo 'Building...'
-                // Add your build commands here
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing...'
-                // Add your test commands here
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying...'
-                // Add your deploy commands here
-            }
+        stage('Build') { steps { echo 'Building...' } }
+        stage('Test') { steps { echo 'Testing...' } }
+        stage('Deploy') { steps { echo 'Deploying...' } }
+    }
+    post {
+        always {
+            // Send build status to GitHub
+            githubNotify context: 'Jenkins CI', status: currentBuild.currentResult
         }
     }
 }
