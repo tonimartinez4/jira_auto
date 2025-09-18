@@ -1,40 +1,22 @@
 pipeline {
     agent any
-
     stages {
-        stage('HTTP Checks') {
+        stage('Build') {
             steps {
-                script {
-                    def urls = [
-                        'https://example.com/api/health1',
-                        'https://example.com/api/health2'
-                    ]
-                    def failed = []
-
-                    urls.each { url ->
-                        def code = sh(
-                            script: "curl -s -o /dev/null -w \"%{http_code}\" ${url}",
-                            returnStdout: true
-                        ).trim()
-                        echo "Checked ${url} → HTTP ${code}"
-                        if (!code.startsWith("2")) {
-                            failed << "${url} (code ${code})"
-                        }
-                    }
-
-                    // Use correct publishChecks syntax
-                    publishChecks(
-                        name: 'HTTP Checks',
-                        title: 'HTTP Endpoint Checks',
-                        summary: failed ? "Failed URLs: ${failed.join(', ')}" : "All URLs OK",
-                        status: 'COMPLETED',                     // Must be COMPLETED
-                        conclusion: failed ? 'FAILURE' : 'SUCCESS'  // Set outcome here
-                    )
-
-                    if (failed) {
-                        error "Some HTTP checks failed"
-                    }
-                }
+                echo 'Building...'
+                // Add your build commands here
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing...'
+                // Add your test commands here
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
+                // Add your deploy commands here
             }
         }
     }
