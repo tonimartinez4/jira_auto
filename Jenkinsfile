@@ -1,3 +1,6 @@
+import io.jenkins.plugins.checks.api.ChecksStatus
+import io.jenkins.plugins.checks.api.ChecksConclusion
+
 pipeline {
     agent any
     stages {
